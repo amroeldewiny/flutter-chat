@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1087336182865",
+    "firebase_url": "https://pop-art-8117e.firebaseio.com",
+    "project_id": "pop-art-8117e",
+    "storage_bucket": "pop-art-8117e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087336182865:android:ec43c4f71722ef975f7470",
+        "android_client_info": {
+          "package_name": "com.nikkelart.popart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087336182865-5et5qab8h54mbq8acghujl1v1h2hfn5j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGw2LnTms5vHSuM49OTO381bZlf8uFagY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087336182865-5et5qab8h54mbq8acghujl1v1h2hfn5j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
