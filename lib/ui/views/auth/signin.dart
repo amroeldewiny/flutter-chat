@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:popart/core/widget/popbutton.dart';
 import 'package:popart/core/widget/popinput.dart';
@@ -29,8 +28,8 @@ class _SignInState extends State<SignIn> {
   String email;
   String password;
 
-  //final FirebaseAuth _auth = FirebaseAuth.instance;
-  //SharedPreferences prefs;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  SharedPreferences prefs;
 
   @override
   void initState() {
@@ -53,25 +52,11 @@ class _SignInState extends State<SignIn> {
     }
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  SharedPreferences prefs;
-  final CollectionReference userCollection =
-      Firestore.instance.collection('users');
-
   Future loginUser(String email, String password) async {
     try {
       AuthResult authResult = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = authResult.user;
-
-      if (user != null) {
-        final QuerySnapshot result = await userCollection
-            .where('userId', isEqualTo: user.uid)
-            .getDocuments();
-        currentUser = user;
-        await prefs.setString('userId', currentUser.uid);
-        await prefs.setString('name', currentUser.displayName);
-      }
 
       this.setState(() {
         loading = false;

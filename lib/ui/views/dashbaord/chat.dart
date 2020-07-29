@@ -14,17 +14,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:popart/core/widget/popappbar.dart';
 import 'package:popart/core/widget/poploading.dart';
 import 'package:popart/core/widget/popfullphoto.dart';
+import 'package:popart/core/widget/popdrawer.dart';
 
 class Chat extends StatelessWidget {
   final String chaterId;
   Chat({Key key, this.chaterId}) : super(key: key);
+  final GlobalKey<ScaffoldState> _drawerKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _drawerKey,
+      drawer: PopDrawer(),
       appBar: PopAppBar(
-        title: 'Chat',
-      ),
+          title: 'Chat',
+          callback: () {
+            _drawerKey.currentState.openDrawer();
+          }),
       body: ChatScreen(chaterId: chaterId),
     );
   }

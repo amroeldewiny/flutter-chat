@@ -8,7 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import 'package:popart/core/widget/popappbar.dart';
+import 'package:popart/core/widget/popdrawer.dart';
 import 'package:popart/ui/views/dashbaord/chat.dart';
 
 class Dashboard extends StatefulWidget {
@@ -31,6 +31,7 @@ class _DashboardState extends State<Dashboard> {
       FlutterLocalNotificationsPlugin();
   FirebaseUser currentUser;
   bool loading = false;
+  final GlobalKey<ScaffoldState> _drawerKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -95,8 +96,22 @@ class _DashboardState extends State<Dashboard> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PopAppBar(
-        title: 'Dashbaord',
+      key: _drawerKey,
+      drawer: PopDrawer(),
+      appBar: AppBar(
+        backgroundColor: Colors.indigo,
+        elevation: 0,
+        title: Text('Dashboard'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              _drawerKey.currentState.openDrawer();
+            },
+          ),
+        ],
+        leading: Container(),
+        centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.indigo,

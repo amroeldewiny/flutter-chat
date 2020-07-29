@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:popart/core/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:popart/core/widget/popbutton.dart';
@@ -20,6 +21,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
   bool isLoggedIn = false;
@@ -51,64 +53,9 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   SharedPreferences prefs;
   final CollectionReference userCollection =
       Firestore.instance.collection('users');
-
-  Future registerUser(String email, String password, String name) async {
-    try {
-      AuthResult authResult = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = authResult.user;
-
-      if (user != null) {
-        final QuerySnapshot result = await userCollection
-            .where('userId', isEqualTo: user.uid)
-            .getDocuments();
-
-        final List<DocumentSnapshot> documents = result.documents;
-        if (documents.length == 0) {
-          userCollection.document(user.uid).setData({
-            'name': name,
-            'email': email,
-            'userId': user.uid,
-            'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-            'chattingWith': null
-          });
-          currentUser = user;
-          await prefs.setString('userId', currentUser.uid);
-          await prefs.setString('name', currentUser.displayName);
-        } else {
-          await prefs.setString('userId', documents[0]['userId']);
-          await prefs.setString('name', documents[0]['user']);
-        }
-        this.setState(() {
-          loading = false;
-        });
-      }
-
-      await Navigator.push(
-          context,
-          new MaterialPageRoute(
-            builder: (BuildContext context) =>
-                Dashboard(currentUserId: user.uid),
-            fullscreenDialog: true,
-          ));
-
-      /*await Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => Dashboard(
-                    currentUserId: user.uid,
-                  )));*/
-
-      return user.uid;
-    } catch (error) {
-      loading = false;
-      print(error);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -197,21 +144,16 @@ class _SignUpState extends State<SignUp> {
                     PopButton(
                       text: 'Register',
                       callback: () async {
-                        try {
-                          if (_formKey.currentState.validate()) {
-                            setState(() => loading = true);
-                            if (password == conPass) {
-                              dynamic result =
-                                  await registerUser(email, password, name);
-                            } else {
-                              loading = false;
-                              print('Your password did\'t match');
-                            } // End if else confirm password
-                          } // End form validate
-                        } catch (e) {
-                          loading = false;
-                          print(e.message.toString());
-                        } // End try catch block
+                        if (_formKey.currentState.validate()) {
+                          setState(() => loading = true);
+                          if (password == conPass) {
+                            dynamic result = await _auth
+                                .signInWithEmailAndPassword(email, password);
+                          } else {
+                            loading = false;
+                            print('Your password did\'t match');
+                          } // End if else confirm password
+                        } // End form validate
                       },
                     ),
                     SizedBox(
